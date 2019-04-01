@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Patient Monitoring</string>
+    <string name="title_activity_geofence">Map</string>
+    <string name="title_activity_geofence_creator">Map</string>
+    <string name="title_activity_alarm">AlarmActivity</string>
+    <string name="title_activity_alarm_snooze_receiver">AlarmSnoozeReceiver</string>
+    <string name="action_settings">Settings</string>
+    <string name="dir_button_text">Get Directions</string>
+    <string name="duration_tv_text">Duration...</string>
+    <string name="distance_tv_text">Distance...</string>
+    <string name="Latitude">Latitude</string>
+    <string name="Longitude">Longitude</string>
+    <string name="Back">BACK</string>
+    <string name="Stop">STOP</string>
+    <string name="map_api_key">AIzaSyB92xEcjcFq8-Xhw1kDGspoEtiOgLxz6EY</string>
+</resources>

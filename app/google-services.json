@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "250741749661",
+    "firebase_url": "https://patientmonitoring-c31b0.firebaseio.com",
+    "project_id": "patientmonitoring-c31b0",
+    "storage_bucket": "patientmonitoring-c31b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250741749661:android:351ec93c2925b3ca",
+        "android_client_info": {
+          "package_name": "com.wjcparkinson.patientmonitoring"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250741749661-ktlujr6gogob3vmb7f7ifaj2q0she1bl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wjcparkinson.patientmonitoring",
+            "certificate_hash": "dba67dd676d904894c15f424409ca53d0020e66f"
+          }
+        },
+        {
+          "client_id": "250741749661-k72qh4lkbdgul4r3ufo8151ur950pg5q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDox5lBmnH40J1R9dO_nylNbNG7AyNEZ14"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250741749661-k72qh4lkbdgul4r3ufo8151ur950pg5q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

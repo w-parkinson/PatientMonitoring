@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LocationActivity">
+
+    <TextView
+        android:id="@+id/latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Latitude"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+
+    <TextView
+        android:id="@+id/textLat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_below="@+id/latitude"
+        />
+
+    <TextView
+        android:id="@+id/Longitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Longitude"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/textLat"
+        />
+
+    <TextView
+        android:id="@+id/textLong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_below="@+id/Longitude"
+        />
+
+
+    <Button
+        android:id="@+id/StopBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Stop"
+        android:onClick="StopListener"
+        />
+</LinearLayout>

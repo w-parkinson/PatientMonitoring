@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +31,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-public class GeofenceCreator extends FragmentActivity implements OnMapReadyCallback,Geofence {
+public class GeofenceCreator extends AppCompatActivity implements OnMapReadyCallback,Geofence {
 
     private GoogleMap mMap;     //Google map object
     private LatLng EDINBURGH = new LatLng(55.923688,-3.173722);     //Geographic coordinates for Kings buildings in Edinburgh.

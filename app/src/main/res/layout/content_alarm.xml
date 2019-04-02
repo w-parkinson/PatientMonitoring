@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffff99"
+    android:background="@color/common_google_signin_btn_text_dark_default"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.wjcparkinson.patientmonitoring.AlarmActivity"
     tools:showIn="@layout/activity_alarm">
@@ -18,13 +18,14 @@
         android:layout_marginBottom="12dp"
         android:layout_marginEnd="16dp"
         android:clickable="true"
-        android:tint="#ffff99"
-        app:backgroundTint="@android:color/holo_orange_dark"
+        android:tint="@color/common_google_signin_btn_text_dark_default"
+        app:backgroundTint="@color/colorAccent"
         app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+    />
 </RelativeLayout>

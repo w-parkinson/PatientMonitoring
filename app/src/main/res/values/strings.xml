@@ -13,4 +13,9 @@
     <string name="Back">BACK</string>
     <string name="Stop">STOP</string>
     <string name="map_api_key">AIzaSyB92xEcjcFq8-Xhw1kDGspoEtiOgLxz6EY</string>
+    <string name="home_message">Welcome to the patient monitoring app. Please select one of the functions below.</string>
+    <string name="med_alerts">Medication Alerts</string>
+    <string name="get_home">Get Home</string>
+    <string name="cloud_sync">Cloud Sync</string>
+    <string name="pat_bounds">Patient Boundaries</string>
 </resources>

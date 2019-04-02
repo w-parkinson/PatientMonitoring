@@ -3,6 +3,7 @@ package com.wjcparkinson.patientmonitoring;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class HomingActivity extends FragmentActivity implements OnMapReadyCallback, HomingTaskLoadedCallback {
+public class HomingActivity extends AppCompatActivity implements OnMapReadyCallback, HomingTaskLoadedCallback {
 
     // references to ui elements
     private GoogleMap mMap;

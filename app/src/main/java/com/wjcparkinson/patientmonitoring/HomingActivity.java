@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class BhMainActivity extends FragmentActivity implements OnMapReadyCallback, BhTaskLoadedCallback {
+public class HomingActivity extends FragmentActivity implements OnMapReadyCallback, HomingTaskLoadedCallback {
 
     // references to ui elements
     private GoogleMap mMap;
@@ -86,7 +86,7 @@ public class BhMainActivity extends FragmentActivity implements OnMapReadyCallba
 
                         // Send a URL request to directions API
                         String url_str = constructUrl(current, home, "walking");
-                        new BhFetchURL(BhMainActivity.this).execute(url_str, "walking");
+                        new HomingFetchURL(HomingActivity.this).execute(url_str, "walking");
                         Log.d("MAPPO", "Requested URL: " + url_str);
                     }
                 }

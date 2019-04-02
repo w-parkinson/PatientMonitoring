@@ -1,74 +1,86 @@
 package com.wjcparkinson.patientmonitoring;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+// Main home screen of the app, requests permissions and starts other activities when buttons are pressed
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
-    Button geofenceButton;
-    Button alarmButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setup();
+        // Create a list of all permissions required by app
+        String permissions[] = {
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.INTERNET,
+                android.Manifest.permission.SEND_SMS
+        };
+
+        // If any of the permissions aren't granted, request permissions
+        for (String permission : permissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, permissions, 1);
+                break;
+            }
+        }
+
     }
-
-    private void setup(){
-        geofenceButton = findViewById(R.id.button);
-        alarmButton = findViewById(R.id.button2);
-
-        geofenceButton.setOnClickListener(this);
-        alarmButton.setOnClickListener(this);
-    }
-
-
-
 
     @Override
-    public void onClick(View v) {
-        Log.d("HEYO", "onclick: ");
-        switch (v.getId()){
-            case R.id.button:
-                setupGeofence();
-                break;
-            case R.id.button2:
-                setupAlarm();
-                break;
-            case R.id.button3:
-                Log.d("HEYO", "button3: ");
-                setupBh();
-                break;
-            case R.id.button4:
-                setupCloud();
-                break;
-        }
+    public void onClick(View view) {
     }
 
-    private void setupGeofence(){
+    // Go to setup geofence activity
+    public void setupGeofence(View v){
         Intent intent = new Intent(this,GeofenceCreator.class);
         startActivity(intent);
     }
 
-    private void setupAlarm(){
+    // Go to alarm activity
+    public void setupAlarm(View v){
+        Log.d("MYAPP", "setupAlarm: ");
         Intent intent = new Intent(this,AlarmActivity.class);
         startActivity(intent);
     }
 
-    private void setupBh(){
-        Log.d("HEYO", "setupBh: ");
-        Intent intent = new Intent(this,BhMainActivity.class);
+    // Go to return home activity
+    public void setupBh(View v){
+        Intent intent = new Intent(this, HomingActivity.class);
         startActivity(intent);
     }
 
-    private void setupCloud(){
-        Intent intent = new Intent(this,LoginActivity.class);
+    // Go to cloud activity
+    public void setupCloud(View v){
+        Intent intent = new Intent(this, DatabaseLoginActivity.class);
         startActivity(intent);
     }
+
+    // Called when user responds to permission request. If they accept permissions, continue, otherwise
+    // close the app and inform the user.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission Granted
+            } else {
+                // Permission Denied
+                Toast.makeText(this, "The app needs Location and SMS permissions to function.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
 }

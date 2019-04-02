@@ -22,7 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginActivity extends AppCompatActivity {
+public class DatabaseLoginActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
 
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(firebaseAuth.getCurrentUser() != null){
                     //pass the value and goto next activity
                     Intent intent = new Intent();
-                    intent.setClass(LoginActivity.this, AccountActivity.class);
+                    intent.setClass(DatabaseLoginActivity.this, DatabaseAccountActivity.class);
                     //username
                     intent.putExtra("email",mEmail.getText().toString());
                     startActivity(intent);
@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = mPassword.getText().toString();
 
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(LoginActivity.this, "Field cannot be empty.", Toast.LENGTH_LONG).show();
+            Toast.makeText(DatabaseLoginActivity.this, "Field cannot be empty.", Toast.LENGTH_LONG).show();
         }
         else{
             mAuth.signInWithEmailAndPassword(email, password)
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Sign in failed.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(DatabaseLoginActivity.this, "Sign in failed.", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(DatabaseLoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

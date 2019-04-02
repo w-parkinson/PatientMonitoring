@@ -21,20 +21,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.wjcparkinson.patientmonitoring.R;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import static android.content.Context.ALARM_SERVICE;
 import static com.wjcparkinson.patientmonitoring.AlarmActivity.PREFS;
 
-public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
+public class AlarmCustomAdapter extends ArrayAdapter<AlarmDataModel> implements View.OnClickListener {
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    private ArrayList<DataModel> dataSet;
+    private ArrayList<AlarmDataModel> dataSet;
     Context mContext;
 
     AlarmManager alarm_manager;
@@ -49,7 +45,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         // initialize alarm manager
     }
 
-    public CustomAdapter(ArrayList<DataModel> data, Context context, LayoutInflater mInflator, Activity mActivity) {
+    public AlarmCustomAdapter(ArrayList<AlarmDataModel> data, Context context, LayoutInflater mInflator, Activity mActivity) {
         super(context, R.layout.row_item, data);
         this.dataSet = data;
         this.mInflator = mInflator;
@@ -63,7 +59,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
         int position = (Integer) v.getTag();
         Object object = getItem(position);
-        DataModel dataModel = (DataModel) object;
+        AlarmDataModel dataModel = (AlarmDataModel) object;
     }
 
     private int lastPosition = -1;
@@ -75,7 +71,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         alarm_manager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
 
         // Get the data item for this position
-        final DataModel dataModel = getItem(position);
+        final AlarmDataModel dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         final ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -104,7 +100,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         final Calendar calendar = Calendar.getInstance();
 
         //create an intent to Alarm receiver class
-        final Intent my_intent = new Intent(getContext(), Alarm_Receiver.class);
+        final Intent my_intent = new Intent(getContext(), AlarmReceiver.class);
 
         String abcd = dataModel.getTime();
 

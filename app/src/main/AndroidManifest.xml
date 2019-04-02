@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wjcparkinson.patientmonitoring">
 
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality. 
-    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -62,25 +57,21 @@
         </activity>
         <activity android:name=".Splash">
         </activity>
-        <receiver android:name=".Alarm_Receiver" />
+        <receiver android:name=".AlarmReceiver" />
 
         <service
-            android:name=".RingTonePlayingService"
+            android:name=".AlarmRingTonePlayingService"
             android:enabled="true">
         </service>
 
-        <activity
-            android:name=".SettingsActivity">
-        </activity>
+        <activity android:name=".AlarmSettingsActivity"></activity>
 
-        <activity
-            android:name=".BhMainActivity">
-        </activity>
+        <activity android:name=".HomingActivity"></activity>
 
-        <activity android:name=".LocationActivity"></activity>
+        <activity android:name=".DatabaseLocationActivity"></activity>
         <activity android:name=".DatabaseActivity" />
-        <activity android:name=".AccountActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".DatabaseAccountActivity" />
+        <activity android:name=".DatabaseLoginActivity" />
 
     </application>
 

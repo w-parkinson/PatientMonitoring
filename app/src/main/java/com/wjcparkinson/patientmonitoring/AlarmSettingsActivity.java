@@ -17,13 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wjcparkinson.patientmonitoring.R;
-
 import static com.wjcparkinson.patientmonitoring.AlarmActivity.PREFS1;
 import static com.wjcparkinson.patientmonitoring.AlarmActivity.PREFS2;
 import static com.wjcparkinson.patientmonitoring.AlarmActivity.PREFS3;
 
-public class SettingsActivity extends AppCompatActivity {
+public class AlarmSettingsActivity extends AppCompatActivity {
 
     Button ringtone,number,message;
     String chosenRingtone;
@@ -49,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
         number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsActivity.this);
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(AlarmSettingsActivity.this);
                 final View mView = getLayoutInflater().inflate(R.layout.custom_dialog2, null);
                 final TextView question = (TextView) mView.findViewById(R.id.textView);
                 final EditText number =  mView.findViewById(R.id.edit_text);
@@ -64,13 +62,13 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         String num = number.getText().toString();
                         if(num.equals(""))
-                            Toast.makeText(SettingsActivity.this, "Please enter a number!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AlarmSettingsActivity.this, "Please enter a number!!", Toast.LENGTH_SHORT).show();
                         else{
                             SharedPreferences p = getSharedPreferences(PREFS2,0);
                             SharedPreferences.Editor ed = p.edit();
                             ed.putString("numb",num);
                             ed.commit();
-                            Toast.makeText(SettingsActivity.this, "Number entered: "+num, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AlarmSettingsActivity.this, "Number entered: "+num, Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     }
@@ -81,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AlertDialog.Builder mBuilder1 = new AlertDialog.Builder(SettingsActivity.this);
+                final AlertDialog.Builder mBuilder1 = new AlertDialog.Builder(AlarmSettingsActivity.this);
                 final View mView1 = getLayoutInflater().inflate(R.layout.custom_dialog3, null);
                 final TextView question = (TextView) mView1.findViewById(R.id.textView);
                 final EditText mesg =  mView1.findViewById(R.id.edit_text);
@@ -96,7 +94,7 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         String msg = mesg.getText().toString();
                         if(msg.equals(""))
-                            Toast.makeText(SettingsActivity.this, "Please enter the message!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AlarmSettingsActivity.this, "Please enter the message!!", Toast.LENGTH_SHORT).show();
                         else{
                             SharedPreferences p1 = getSharedPreferences(PREFS3,0);
                             SharedPreferences.Editor ed1 = p1.edit();
@@ -133,6 +131,6 @@ public class SettingsActivity extends AppCompatActivity {
                 this.chosenRingtone = null;
             }
         }
-        Toast.makeText(SettingsActivity.this,"Ringtone Selected: "+title,Toast.LENGTH_SHORT).show();
+        Toast.makeText(AlarmSettingsActivity.this,"Ringtone Selected: "+title,Toast.LENGTH_SHORT).show();
     }
 }

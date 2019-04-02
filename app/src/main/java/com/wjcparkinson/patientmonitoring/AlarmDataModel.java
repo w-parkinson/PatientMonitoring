@@ -1,10 +1,10 @@
 package com.wjcparkinson.patientmonitoring;
 //s1880159 Chao Chen
-public class DataModel {
+public class AlarmDataModel {
 
     String time;
 
-    public DataModel(String time) {
+    public AlarmDataModel(String time) {
 
         this.time = time;
     }

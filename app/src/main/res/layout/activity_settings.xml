@@ -9,7 +9,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    tools:context="com.wjcparkinson.patientmonitoring.SettingsActivity">
+    tools:context="com.wjcparkinson.patientmonitoring.AlarmSettingsActivity">
 
     <Button
         android:id="@+id/ringtonepicker"

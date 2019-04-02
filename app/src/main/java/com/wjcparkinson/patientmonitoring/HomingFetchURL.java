@@ -15,11 +15,11 @@ import java.net.URL;
  * Created by Vishal on 10/20/2018.
  */
 
-public class BhFetchURL extends AsyncTask<String, Void, String> {
+public class HomingFetchURL extends AsyncTask<String, Void, String> {
     Context mContext;
     String directionMode = "driving";
 
-    public BhFetchURL(Context mContext) {
+    public HomingFetchURL(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -41,7 +41,7 @@ public class BhFetchURL extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        BhPointsParser parserTask = new BhPointsParser(mContext, directionMode);
+        HomingPointsParser parserTask = new HomingPointsParser(mContext, directionMode);
         // Invokes the thread for parsing the JSON data
         parserTask.execute(s);
     }

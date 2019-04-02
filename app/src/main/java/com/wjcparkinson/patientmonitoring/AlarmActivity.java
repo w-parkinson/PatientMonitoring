@@ -22,8 +22,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
-import com.wjcparkinson.patientmonitoring.R;
-
 import java.util.ArrayList;
 
 import static android.util.Log.d;
@@ -31,9 +29,9 @@ import static android.util.Log.d;
 public class AlarmActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
-    ArrayList<DataModel> dataModels;
+    ArrayList<AlarmDataModel> dataModels;
     ListView listView;
-    private static CustomAdapter adapter;
+    private static AlarmCustomAdapter adapter;
     Context context;
 
     public static final String PREFS = "examplePrefs";
@@ -81,9 +79,9 @@ public class AlarmActivity extends AppCompatActivity {
 
             for (ij = 0; ij < g.length; ij++)
                 if (!g[ij].equals(""))
-                    dataModels.add(new DataModel(g[ij]));
+                    dataModels.add(new AlarmDataModel(g[ij]));
 
-            adapter = new CustomAdapter(dataModels, getApplicationContext(), getLayoutInflater(), AlarmActivity.this);
+            adapter = new AlarmCustomAdapter(dataModels, getApplicationContext(), getLayoutInflater(), AlarmActivity.this);
             listView.setAdapter(adapter);
         }
 
@@ -131,8 +129,8 @@ public class AlarmActivity extends AppCompatActivity {
 
                         Log:d("Tag :: ", f1);
 
-                        dataModels.add(new DataModel(ans));
-                        adapter = new CustomAdapter(dataModels, getApplicationContext(), getLayoutInflater(), AlarmActivity.this);
+                        dataModels.add(new AlarmDataModel(ans));
+                        adapter = new AlarmCustomAdapter(dataModels, getApplicationContext(), getLayoutInflater(), AlarmActivity.this);
                         listView.setAdapter(adapter);
                         dialog.dismiss();
                         Intent intent100 = getIntent();
@@ -160,7 +158,7 @@ public class AlarmActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent12 = new Intent(this.context, SettingsActivity.class);
+            Intent intent12 = new Intent(this.context, AlarmSettingsActivity.class);
             this.context.startActivity(intent12);
             return true;
         }

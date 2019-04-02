@@ -18,30 +18,30 @@ import java.util.List;
  * Created by Vishal on 10/20/2018.
  */
 
-public class BhPointsParser extends AsyncTask<String, Integer, BhRouteInfo> {
-    BhTaskLoadedCallback taskCallback;
+public class HomingPointsParser extends AsyncTask<String, Integer, HomingRouteInfo> {
+    HomingTaskLoadedCallback taskCallback;
     String directionMode = "driving";
 
-    public BhPointsParser(Context mContext, String directionMode) {
-        this.taskCallback = (BhTaskLoadedCallback) mContext;
+    public HomingPointsParser(Context mContext, String directionMode) {
+        this.taskCallback = (HomingTaskLoadedCallback) mContext;
         this.directionMode = directionMode;
     }
 
     // Parsing the data in non-ui thread
     @Override
-    protected BhRouteInfo doInBackground(String... jsonData) {
+    protected HomingRouteInfo doInBackground(String... jsonData) {
 
         JSONObject jObject;
         List<List<HashMap<String, String>>> routes = null;
         int duration = 0;
         int distance = 0;
 
-        BhRouteInfo routeInfo = new BhRouteInfo();
+        HomingRouteInfo routeInfo = new HomingRouteInfo();
 
         try {
             jObject = new JSONObject(jsonData[0]);
             Log.d("mylog", jsonData[0].toString());
-            BhDataParser parser = new BhDataParser();
+            HomingDataParser parser = new HomingDataParser();
             Log.d("mylog", parser.toString());
 
             // Starts parsing data
@@ -65,7 +65,7 @@ public class BhPointsParser extends AsyncTask<String, Integer, BhRouteInfo> {
 
     // Executes in UI thread, after the parsing process
     @Override
-    protected void onPostExecute(BhRouteInfo result) {
+    protected void onPostExecute(HomingRouteInfo result) {
         List<List<HashMap<String, String>>> routes = result.getRoute();
         ArrayList<LatLng> points;
         PolylineOptions lineOptions = null;

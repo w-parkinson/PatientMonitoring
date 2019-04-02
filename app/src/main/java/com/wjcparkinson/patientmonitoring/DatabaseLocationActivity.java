@@ -13,34 +13,21 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class LocationActivity extends AppCompatActivity {
+public class DatabaseLocationActivity extends AppCompatActivity {
     TextView textLat;
     TextView textLong;
 
@@ -70,17 +57,7 @@ public class LocationActivity extends AppCompatActivity {
         locationListener = new mylocationListener();
 
 
-        //grant the permission
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            //ActivityCompat#requestPermissions
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    1);
-            return;
-        }
 
 
         //optimize power
@@ -91,27 +68,6 @@ public class LocationActivity extends AppCompatActivity {
         locationManager.requestLocationUpdates(bestprovider, 10000, 5, locationListener);
 
 
-    }
-
-    //REQUEST LOCATION PERMISSION
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        doNext(requestCode, grantResults);
-    }
-
-    private void doNext(int requestCode, int[] grantResults) {
-        if (requestCode == 1) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission Granted
-            } else {
-                // Permission Denied
-                //  displayFrameworkBugMessageAndExit();
-                Toast.makeText(this, "Please give the permission in AppInfo.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
     }
 
     //optimize power
@@ -193,7 +149,7 @@ public class LocationActivity extends AppCompatActivity {
     /*
     // back to select
     public void backTo(View view) {
-        startActivity(new Intent(LocationActivity.this, AccountActivity.class));
+        startActivity(new Intent(DatabaseLocationActivity.this, DatabaseAccountActivity.class));
         //do not kill activity
         moveTaskTOBack(true);
     }
@@ -207,8 +163,8 @@ public class LocationActivity extends AppCompatActivity {
     //Stop the listener to save power
     public void StopListener(View view) {
         locationManager.removeUpdates(locationListener);
-        Toast.makeText(LocationActivity.this, "Location Listener stopped.", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(LocationActivity.this, AccountActivity.class));
+        Toast.makeText(DatabaseLocationActivity.this, "Location Listener stopped.", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(DatabaseLocationActivity.this, DatabaseAccountActivity.class));
     }
 
 }

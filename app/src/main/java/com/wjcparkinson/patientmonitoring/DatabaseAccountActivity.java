@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class AccountActivity extends AppCompatActivity {
+public class DatabaseAccountActivity extends AppCompatActivity {
 
     private FirebaseUser mAuth;
     TextView tv_username;
@@ -45,16 +45,16 @@ public class AccountActivity extends AppCompatActivity {
 
     // go to database activity
     public void startDB(View view){
-        startActivity(new Intent(AccountActivity.this,DatabaseActivity.class));
+        startActivity(new Intent(DatabaseAccountActivity.this,DatabaseActivity.class));
     }
     // go to location activity
     public void startLC(View view){
-        startActivity(new Intent(AccountActivity.this,LocationActivity.class));
+        startActivity(new Intent(DatabaseAccountActivity.this, DatabaseLocationActivity.class));
     }
 
     public void logOut(View view){
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(AccountActivity.this, MainActivity.class));
+        startActivity(new Intent(DatabaseAccountActivity.this, MainActivity.class));
 
 
     }

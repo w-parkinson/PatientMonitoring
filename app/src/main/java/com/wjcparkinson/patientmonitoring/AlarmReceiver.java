@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class Alarm_Receiver extends BroadcastReceiver{
+public class AlarmReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -20,7 +20,7 @@ public class Alarm_Receiver extends BroadcastReceiver{
         Log.d("Tag :: ", asd);
 
         // create an intent to the ringtone service
-        Intent service_intent = new Intent(context, RingTonePlayingService.class);
+        Intent service_intent = new Intent(context, AlarmRingTonePlayingService.class);
 
         // pass the extra string from Main Activity to the Ring Tone Playing Service
         service_intent.putExtra("extra", get_your_string);

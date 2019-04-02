@@ -28,7 +28,7 @@ import static com.wjcparkinson.patientmonitoring.AlarmActivity.PREFS2;
 import static com.wjcparkinson.patientmonitoring.AlarmActivity.PREFS3;
 import static com.wjcparkinson.patientmonitoring.AlarmActivity.PREFS1;
 
-public class RingTonePlayingService extends Service implements View.OnTouchListener {
+public class AlarmRingTonePlayingService extends Service implements View.OnTouchListener {
 
     MediaPlayer media_song;
     boolean isRunning;

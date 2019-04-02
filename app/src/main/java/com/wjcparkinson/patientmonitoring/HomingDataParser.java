@@ -10,10 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+// Class HomingDataParser - Adam Harper, s1440298
+// Contains the functionality associated with decoding the JSON route information returned from the
+// Google Directions API.
 
-public class BhDataParser {
+public class HomingDataParser {
+
+    // Parses data fetched from the google directions api, passed as a JSON object.
     public List<List<HashMap<String, String>>> parse(JSONObject jObject) {
-
         List<List<HashMap<String, String>>> routes = new ArrayList<>();
         JSONArray jRoutes;
         JSONArray jLegs;

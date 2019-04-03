@@ -8,6 +8,7 @@ package com.wjcparkinson.patientmonitoring;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-public class DatabaseActivity extends FragmentActivity implements OnMapReadyCallback {
+public class DatabaseActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "DatabaseActivity";
     private TextView tv_user;

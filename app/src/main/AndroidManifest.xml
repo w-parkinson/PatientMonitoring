@@ -4,11 +4,11 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="com.example.permission.MAPS_RECEIVE"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.example.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -17,20 +17,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".HomingPreferences"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,25 +37,23 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".AlarmActivity"
             android:label="@string/med_alerts"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
+
         <receiver android:name=".AlarmReceiver" />
-        <activity android:name=".AlarmSettingsActivity"></activity>
+
+        <activity android:name=".AlarmSettingsActivity" />
+
         <service
             android:name=".AlarmRingTonePlayingService"
-            android:enabled="true">
-        </service>
-
+            android:enabled="true" />
 
         <activity
             android:name=".GeofenceCreator"
-            android:label="@string/pat_bounds">
-        </activity>
+            android:label="@string/pat_bounds" />
+
         <receiver
             android:name=".GeofenceReceiver"
             android:exported="false">
@@ -65,30 +62,21 @@
             </intent-filter>
         </receiver>
 
-
         <activity
             android:name=".HomingActivity"
-            android:label="@string/get_home">
-        </activity>
-
-
+            android:label="@string/get_home" />
         <activity
             android:name=".DatabaseLocationActivity"
-            android:label="@string/cloud_sync">
-        </activity>
+            android:label="@string/cloud_sync" />
         <activity
             android:name=".DatabaseActivity"
-            android:label="@string/cloud_sync">
-        </activity>
+            android:label="@string/cloud_sync" />
         <activity
             android:name=".DatabaseAccountActivity"
-            android:label="@string/cloud_sync">
-        </activity>
+            android:label="@string/cloud_sync" />
         <activity
             android:name=".DatabaseLoginActivity"
-            android:label="@string/cloud_sync">
-        </activity>
-
+            android:label="@string/cloud_sync" />
     </application>
 
 </manifest>

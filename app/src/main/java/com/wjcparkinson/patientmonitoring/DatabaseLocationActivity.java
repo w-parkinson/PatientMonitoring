@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,21 +52,24 @@ public class DatabaseLocationActivity extends AppCompatActivity {
 
         textLat = (TextView) findViewById(R.id.textLat);
         textLong = (TextView) findViewById(R.id.textLong);
+
         //call the location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         //initialize the listener
         locationListener = new mylocationListener();
-
-
-
-
 
         //optimize power
         bestprovider = locationManager.getBestProvider(getcriteria(), true);
 
-
         //Update the current activity periodically
-        locationManager.requestLocationUpdates(bestprovider, 10000, 5, locationListener);
+        try {
+            Log.d("PATIENTAPP", "requesting updates: ");
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -90,8 +94,12 @@ public class DatabaseLocationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        locationManager.requestLocationUpdates(bestprovider, 10000, 0, locationListener);
-
+        try {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -104,11 +112,13 @@ public class DatabaseLocationActivity extends AppCompatActivity {
         //location changed and upload every 10s because the sensor setting
         @Override
         public void onLocationChanged(Location location) {
+            Log.d("PATIENTAPP", "onLocationChanged: ");
             if (location != null) {
                 tLat = location.getLatitude();
                 tLong = location.getLongitude();
                 textLat.setText(Double.toString(tLat));
                 textLong.setText(Double.toString(tLong));
+
                 //create database and send value to it
                 mReference = FirebaseDatabase.getInstance().getReference();
                 final DatabaseReference myLat = mReference.child("Latitude");
@@ -125,6 +135,10 @@ public class DatabaseLocationActivity extends AppCompatActivity {
                 //upload time to the database
                 final DatabaseReference myTimeStamp = mReference.child("TimeStamp");
                 myTimeStamp.setValue(timestamp);
+
+                // if current network is in list
+                    // return location of hub
+
             }
         }
 

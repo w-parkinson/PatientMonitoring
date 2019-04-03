@@ -1,0 +1,44 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="home_location_lat"
+        android:inputType="numberDecimal|numberSigned"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/home_lat_preference_title"
+        android:summary="@string/home_lat_preference_summary" />
+
+    <EditTextPreference
+        android:key="home_location_lon"
+        android:inputType="numberDecimal|numberSigned"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/home_lon_preference_title"
+        android:summary="@string/home_lon_preference_summary" />
+
+    <SwitchPreference
+        android:key="live_tracking"
+        android:defaultValue="false"
+        android:summary="@string/live_tracking_preference_summary"
+        android:title="@string/live_tracking_preference_title"
+    />
+
+    <ListPreference
+        android:key="direction_mode"
+        android:defaultValue="walking"
+        android:entries="@array/direction_mode_entries"
+        android:entryValues="@array/direction_mode_entry_values"
+        android:title="@string/direction_mode_preference_title"
+        android:summary="@string/direction_mode_preference_summary"
+    />
+
+
+
+
+</PreferenceScreen>
+
+
+

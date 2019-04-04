@@ -21,7 +21,7 @@
     <string name="settings">Settings</string>
     <string name="title_activity_homing_settings">Get Home Settings</string>
 
-    <!-- Example General settings -->
+    <!-- Text associated with homing preferences -->
     <string name="live_tracking_preference_title">Live Tracking</string>
     <string name="live_tracking_preference_summary">Enable for live direction updates. Higher power consumption.</string>
     <string name="home_lat_preference_summary">The latitude of the home destination.</string>
@@ -30,6 +30,7 @@
     <string name="home_lon_preference_title">Home Longitude</string>
     <string name="direction_mode_preference_summary">The type of directions supplied.</string>
     <string name="direction_mode_preference_title">Direction Mode</string>
-
+    <string name="update_interval_preference_summary">The interval in seconds between direction updates when Live Tracking is enabled.</string>
+    <string name="update_interval_preference_title">Update Interval</string>
 
 </resources>

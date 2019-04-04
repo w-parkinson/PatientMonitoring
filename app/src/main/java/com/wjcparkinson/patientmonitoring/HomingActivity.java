@@ -2,6 +2,7 @@ package com.wjcparkinson.patientmonitoring;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -33,6 +34,10 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class HomingActivity extends AppCompatActivity implements OnMapReadyCallback, HomingTaskLoadedCallback {
 
     // for debugging
@@ -52,10 +57,11 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
     private final int mPadding = 200;
 
     // for drawing the route on the map
-    Polyline currentPolyline;
     LatLng home;
     boolean liveTracking;
+    long updateInterval;
     String directionMode;
+    boolean hasZoomed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +98,8 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onResume() {
         super.onResume();
 
+        hasZoomed = false;
+
         // Find the saved preferences for homing
         SharedPreferences homingPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         float homeLat = Float.parseFloat(homingPrefs.getString("home_location_lat", "0.0"));
@@ -99,6 +107,7 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         home = new LatLng(homeLat, homeLon);
         liveTracking = homingPrefs.getBoolean("live_tracking", false);
         directionMode = homingPrefs.getString("direction_mode", "walking");
+        updateInterval = 1000 * Integer.parseInt(homingPrefs.getString("update_interval", "5"));
 
         Log.d(TAG, "onResume: homeLat = " + homeLat);
         Log.d(TAG, "onResume: homeLon = " + homeLon);
@@ -112,8 +121,8 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
 
             // Define the settings of the location request
             LocationRequest locationRequest = LocationRequest.create();
-            locationRequest.setInterval(5000);
-            locationRequest.setFastestInterval(5000);
+            locationRequest.setInterval(updateInterval);
+            locationRequest.setFastestInterval(updateInterval);
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
             // Send the Location Request
@@ -185,11 +194,13 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         mMap.addMarker(new MarkerOptions().position(current).title("Start"));
         mMap.addMarker(new MarkerOptions().position(home).title("Home"));
 
-        // Move the camera to focus on the two markers
-        LatLngBounds.Builder boundBuilder = LatLngBounds.builder();
-        boundBuilder.include(home);
-        boundBuilder.include(current);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), mPadding));
+        // Move the camera to focus on the two markers (unless zoom has already happened)
+        if (!hasZoomed) {
+            LatLngBounds.Builder boundBuilder = LatLngBounds.builder();
+            boundBuilder.include(home);
+            boundBuilder.include(current);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), mPadding));
+        }
 
         // Send a URL request to directions API
         String url_str = constructUrl(current, home, directionMode);
@@ -207,11 +218,30 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onTaskDone(PolylineOptions polylineOptions, int duration, int distance) {
-        currentPolyline = mMap.addPolyline(polylineOptions);
-        distanceTv.setText("~" + distance + "m");
-        durationTv.setText("~" + duration/60 + " minutes" );
-        Log.d(TAG, "duration " + duration);
-        Log.d(TAG, "distance " + distance);
+    public void onTaskDone(HomingPathInfo pathInfo) {
+
+        List<HashMap<String, String>> path = pathInfo.getPath();
+        ArrayList<LatLng> points = new ArrayList<>();
+        PolylineOptions lineOptions = new PolylineOptions();
+
+        // Fetch all the points in the path
+        for (int j = 0; j < path.size(); j++) {
+            double lat = Double.parseDouble(path.get(j).get("lat"));
+            double lon = Double.parseDouble(path.get(j).get("lon"));
+            points.add(new LatLng(lat, lon));
+        }
+
+        // Add all the points in the route to LineOptions
+        lineOptions.addAll(points);
+        lineOptions.width(20);
+        lineOptions.color(Color.GREEN);
+
+        // Display the polyline on screen
+        mMap.addPolyline(lineOptions);
+
+        // Display additional route information
+        distanceTv.setText("~" + pathInfo.getDistance());
+        durationTv.setText("~" + pathInfo.getDuration());
+
     }
 }

@@ -1,5 +1,7 @@
 package com.wjcparkinson.patientmonitoring;
 
+import android.net.RouteInfo;
+
 import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
@@ -7,5 +9,5 @@ import com.google.android.gms.maps.model.PolylineOptions;
  */
 
 public interface HomingTaskLoadedCallback {
-    void onTaskDone(PolylineOptions polylineOptions, int duration, int distance);
+    void onTaskDone(HomingPathInfo pathInfo);
 }

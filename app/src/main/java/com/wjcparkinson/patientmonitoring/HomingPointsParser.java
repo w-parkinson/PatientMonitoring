@@ -8,6 +8,8 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -18,9 +20,9 @@ import java.util.List;
  * Created by Vishal on 10/20/2018.
  */
 
-public class HomingPointsParser extends AsyncTask<String, Integer, HomingRouteInfo> {
+public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInfo> {
     HomingTaskLoadedCallback taskCallback;
-    String directionMode = "driving";
+    String directionMode;
 
     public HomingPointsParser(Context mContext, String directionMode) {
         this.taskCallback = (HomingTaskLoadedCallback) mContext;
@@ -29,79 +31,116 @@ public class HomingPointsParser extends AsyncTask<String, Integer, HomingRouteIn
 
     // Parsing the data in non-ui thread
     @Override
-    protected HomingRouteInfo doInBackground(String... jsonData) {
+    protected HomingPathInfo doInBackground(String... jsonData) {
 
         JSONObject jObject;
-        List<List<HashMap<String, String>>> routes = null;
-        int duration = 0;
-        int distance = 0;
-
-        HomingRouteInfo routeInfo = new HomingRouteInfo();
+        HomingPathInfo pathInfo = new HomingPathInfo();
 
         try {
             jObject = new JSONObject(jsonData[0]);
-            Log.d("mylog", jsonData[0].toString());
-            HomingDataParser parser = new HomingDataParser();
-            Log.d("mylog", parser.toString());
-
-            // Starts parsing data
-            routes = parser.parse(jObject);
-            duration = parser.getFirstLegDuration(jObject);
-            distance = parser.getFirstLegDistance(jObject);
-            Log.d("mylog", "Routes " + routes.toString());
-            Log.d("mylog", "Duration " + duration);
-            Log.d("mylog", "Distance " + distance);
-
+            pathInfo = parse(jObject);
         } catch (Exception e) {
             Log.d("mylog", e.toString());
             e.printStackTrace();
         }
 
-        routeInfo.setRoute(routes);
-        routeInfo.setDistance(distance);
-        routeInfo.setDuration(duration);
-        return routeInfo;
+        return pathInfo;
     }
 
     // Executes in UI thread, after the parsing process
     @Override
-    protected void onPostExecute(HomingRouteInfo result) {
-        List<List<HashMap<String, String>>> routes = result.getRoute();
-        ArrayList<LatLng> points;
-        PolylineOptions lineOptions = null;
-
-
-        // Traversing through all the routes
-        for (int i = 0; i < routes.size(); i++) {
-            points = new ArrayList<>();
-            lineOptions = new PolylineOptions();
-            // Fetching i-th route
-            List<HashMap<String, String>> path = routes.get(i);
-            // Fetching all the points in i-th route
-            for (int j = 0; j < path.size(); j++) {
-                HashMap<String, String> point = path.get(j);
-                double lat = Double.parseDouble(point.get("lat"));
-                double lng = Double.parseDouble(point.get("lng"));
-                LatLng position = new LatLng(lat, lng);
-                points.add(position);
-            }
-            // Adding all the points in the route to LineOptions
-            lineOptions.addAll(points);
-            if (directionMode.equalsIgnoreCase("walking")) {
-                lineOptions.width(10);
-                lineOptions.color(Color.MAGENTA);
-            } else {
-                lineOptions.width(20);
-                lineOptions.color(Color.BLUE);
-            }
-            Log.d("mylog", "onPostExecute lineoptions decoded");
-        }
-
-        // Drawing polyline in the Google Map for the i-th route
-        if (lineOptions != null) {
-            taskCallback.onTaskDone(lineOptions, result.getDuration(), result.getDistance());
-        } else {
-            Log.d("mylog", "without Polylines drawn");
-        }
+    protected void onPostExecute(HomingPathInfo result) {
+        taskCallback.onTaskDone(result);
     }
+
+    // Parses data fetched from the google directions api, passed as a JSON object.
+    public HomingPathInfo parse(JSONObject jObject) {
+
+        List<HashMap<String, String>> path = new ArrayList<>();
+        String distance = "";
+        String duration = "";
+
+        JSONObject jRoute;
+        JSONObject jLeg;
+        JSONArray jSteps;
+
+        try {
+
+            // Get the single leg of the first route
+            jRoute = (JSONObject) jObject.getJSONArray("routes").get(0);
+            jLeg = (JSONObject) jRoute.getJSONArray("legs").get(0);
+            jSteps = jLeg.getJSONArray("steps");
+
+            // traverse the steps of the leg
+            for (int k = 0; k < jSteps.length(); k++) {
+                String polyline = "";
+                polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
+                List<LatLng> list = decodePoly(polyline);
+
+                // traverse the points in each step, adding to path
+                for (int l = 0; l < list.size(); l++) {
+                    HashMap<String, String> hm = new HashMap<>();
+                    hm.put("lat", Double.toString((list.get(l)).latitude));
+                    hm.put("lon", Double.toString((list.get(l)).longitude));
+                    path.add(hm);
+                }
+            }
+
+            // get the distance, duration of the route
+            distance = ((JSONObject) jLeg.get("distance")).getString("text");
+            duration = ((JSONObject) jLeg.get("duration")).getString("text");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HomingPathInfo pathInfo = new HomingPathInfo();
+        pathInfo.setPath(path);
+        pathInfo.setDuration(duration);
+        pathInfo.setDistance(distance);
+
+        return pathInfo;
+    }
+
+
+    /**
+     * Method to decode polyline points
+     * Courtesy : https://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
+     */
+    private List<LatLng> decodePoly(String encoded) {
+
+        List<LatLng> poly = new ArrayList<>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
+            poly.add(p);
+        }
+
+        return poly;
+    }
+
 }

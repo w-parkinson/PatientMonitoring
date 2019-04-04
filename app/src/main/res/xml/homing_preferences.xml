@@ -26,6 +26,17 @@
         android:title="@string/live_tracking_preference_title"
     />
 
+    <EditTextPreference
+        android:key="update_interval"
+        android:defaultValue="5"
+        android:summary="@string/update_interval_preference_summary"
+        android:title="@string/update_interval_preference_title"
+        android:inputType="number"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+    />
+
     <ListPreference
         android:key="direction_mode"
         android:defaultValue="walking"

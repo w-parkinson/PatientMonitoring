@@ -11,9 +11,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.util.HashMap;
+
 // Main home screen of the app, requests permissions and starts other activities when buttons are pressed
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private final String TAG = "HOMESCREEN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +43,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ActivityCompat.requestPermissions(this, permissions, 1);
                 break;
             }
+        }
+
+        // Save BSSID, LatLng pairs to shared preferences
+        HashMap<String, String> bssidLocs = new HashMap<String, String>();
+        bssidLocs.put("1234", (new LatLng(0f, 0f).toString()));
+        try {
+            File file = new File(getDir("data", MODE_PRIVATE), "bssidLocPairs");
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            outputStream.writeObject(bssidLocs);
+            outputStream.flush();
+            outputStream.close();
+            Log.d(TAG, "onCreate: wrote hashmap to storage");
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate: " + e.toString());
         }
 
     }

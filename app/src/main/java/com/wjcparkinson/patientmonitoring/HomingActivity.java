@@ -200,6 +200,7 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
             boundBuilder.include(home);
             boundBuilder.include(current);
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), mPadding));
+            hasZoomed = true;
         }
 
         // Send a URL request to directions API

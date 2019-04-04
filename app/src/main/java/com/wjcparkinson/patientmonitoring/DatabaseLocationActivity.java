@@ -192,6 +192,10 @@ public class DatabaseLocationActivity extends AppCompatActivity {
                         String indoorLatLng = knownLocs.get(bestBssid);
                         if (indoorLatLng != null) {
                             Log.d(TAG, "onLocationChanged: Strongest bssid matched stored: " + bestBssid);
+                            String[] latLngSplit = indoorLatLng.split(",");
+                            tLat = Double.parseDouble(latLngSplit[0]);
+                            tLong = Double.parseDouble(latLngSplit[1]);
+                            Log.d(TAG, "onLocationChanged: new lat,lon: " + tLat + "," + tLong);
                         } else {
                             Log.d(TAG, "onLocationChanged: Strongest bssid not in stored list: " + bestBssid);
                         }

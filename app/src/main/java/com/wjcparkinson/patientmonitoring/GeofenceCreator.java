@@ -38,7 +38,7 @@ public class GeofenceCreator extends AppCompatActivity implements OnMapReadyCall
     private Button confirm;     //Button for confirming Geofence selection.
     private String tag = "main activity";                 //Tag used for this activity.
     private String GEOFENCE_KEY = "451";            //Request ID used for creating geofence.
-    private LatLng geoCentre;       //Coordinates of the selected of the chosen geofence.
+    private LatLng geoCentre;       //Coordinates of the selected geofence.
 
     final int radius = 300;     //Radius of the geofence in meters. Currently set at 300.
 
@@ -134,6 +134,11 @@ public class GeofenceCreator extends AppCompatActivity implements OnMapReadyCall
         //After the geofence has been created return to the main activity.
         Intent intentMain = new Intent(this,MainActivity.class);
         startActivity(intentMain);
+    }
+
+    private void numberSet(){
+        Intent intentNumber = new Intent(this,NumberActivity.class);
+        startActivity(intentNumber);
     }
 
     //Display message if geofence successfully created.

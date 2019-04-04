@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomingPreferences"></activity>
+        <activity android:name=".HomingPreferences" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -79,6 +79,7 @@
         <activity
             android:name=".DatabaseLoginActivity"
             android:label="@string/cloud_sync" />
+        <activity android:name=".PhoneSetter"></activity>
     </application>
 
 </manifest>

@@ -3,6 +3,11 @@ package com.wjcparkinson.patientmonitoring;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Data class that contains a path's duration, distance and a list of points in the route.
+ *
+ * Adam Harper, s1440298
+ */
 public class HomingPathInfo {
     private String duration;
     private String distance;

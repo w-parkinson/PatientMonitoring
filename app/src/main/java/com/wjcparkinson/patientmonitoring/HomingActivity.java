@@ -143,7 +143,11 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
             // Send the Location Request
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+            try {
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+            } catch (SecurityException e) {
+                Log.d(TAG, "onResume: " + e.toString());
+            }
 
         } else {
             getDirButton.setEnabled(true);
@@ -213,8 +217,11 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         locationRequest.setNumUpdates(1);
 
         // Send the request
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-
+        try {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        } catch (SecurityException e) {
+            Log.d(TAG, "onResume: " + e.toString());
+        }
     }
 
 

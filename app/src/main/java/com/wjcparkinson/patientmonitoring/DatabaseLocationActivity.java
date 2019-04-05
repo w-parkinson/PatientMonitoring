@@ -216,7 +216,7 @@ public class DatabaseLocationActivity extends AppCompatActivity {
                 //set time on cloud
                 //get the system local time
                 SimpleDateFormat dff = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                dff.setTimeZone(TimeZone.getTimeZone("GMT+00"));
+                dff.setTimeZone(TimeZone.getTimeZone("GMT+01"));
                 //create timestamp string
                 String timestamp = dff.format(new Date());
 

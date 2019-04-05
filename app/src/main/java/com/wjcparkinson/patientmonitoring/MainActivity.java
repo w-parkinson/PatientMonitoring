@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Save BSSID, LatLng pairs to shared preferences
         HashMap<String, String> bssidLocs = new HashMap<String, String>();
-        bssidLocs.put("48:d3:43:44:93:69", "55.946159,-3.162827");
+        bssidLocs.put("9c:30:5b:63:d1:55", "55.922644, -3.172765");
+        bssidLocs.put("54:78:1a:73:a2:61", "55.922651, -3.172547");
+
         try {
             File file = new File(getDir("data", MODE_PRIVATE), "bssidLocPairs");
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));

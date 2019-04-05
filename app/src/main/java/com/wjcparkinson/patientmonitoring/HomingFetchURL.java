@@ -12,9 +12,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Vishal on 10/20/2018.
+ * HomingFetchURL.java An asynchronous task that runs in the background. Requests Directions data from
+ * a URL. Once the data has downloaded, instantiates a HomingPointsParser to parse the data. Courtesy:
+ * https://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
+ *
+ * Adam Harper, s1440298
  */
-
 public class HomingFetchURL extends AsyncTask<String, Void, String> {
     Context mContext;
     String directionMode = "driving";
@@ -23,6 +26,10 @@ public class HomingFetchURL extends AsyncTask<String, Void, String> {
         this.mContext = mContext;
     }
 
+    /**
+     * Specifies the behaviour of the background task: downloading data from the url passed as
+     * strings[0].
+     */
     @Override
     protected String doInBackground(String... strings) {
         // For storing data from web service
@@ -38,6 +45,10 @@ public class HomingFetchURL extends AsyncTask<String, Void, String> {
         return data;
     }
 
+    /**
+     * Executes on completion of the background task. Instantiates a parser task for interpreting
+     * the downloaded data (passes in String s)
+     */
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
@@ -46,6 +57,10 @@ public class HomingFetchURL extends AsyncTask<String, Void, String> {
         parserTask.execute(s);
     }
 
+
+    /**
+     * Given a URL, downloads the data and returns it as a string
+     */
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;

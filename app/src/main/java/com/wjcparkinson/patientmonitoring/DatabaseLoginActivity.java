@@ -6,6 +6,7 @@ Cloud DataExchange
 package com.wjcparkinson.patientmonitoring;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class DatabaseLoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private Button btnSignup;
 
+    private CheckBox chkUser;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -48,6 +51,8 @@ public class DatabaseLoginActivity extends AppCompatActivity {
 
         btnLogin = (Button) findViewById(R.id.btnlogin);
         btnSignup = (Button) findViewById(R.id.btnsignup);
+
+        chkUser = (CheckBox)findViewById(R.id.chk_save);
 
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -87,6 +92,15 @@ public class DatabaseLoginActivity extends AppCompatActivity {
         String email = mEmail.getText().toString();
         String password = mPassword.getText().toString();
 
+        //if check box checked, save the username
+        if(chkUser.isChecked()){
+            saveUserInfo();
+        }else{
+            removeUserInfo(); // if unchecked, remove save username
+        }
+
+
+
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             Toast.makeText(DatabaseLoginActivity.this, "Field cannot be empty.", Toast.LENGTH_LONG).show();
         }
@@ -103,7 +117,6 @@ public class DatabaseLoginActivity extends AppCompatActivity {
 
         }
     }
-
     //registration method
     private void createAccount(){
         String email = mEmail.getText().toString().trim();
@@ -150,6 +163,43 @@ public class DatabaseLoginActivity extends AppCompatActivity {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
 
+    }
+
+
+    // function for saving the username
+    String username;
+    private void saveUserInfo(){
+        String email = mEmail.getText().toString();
+        SharedPreferences userInfo = getSharedPreferences(username, MODE_PRIVATE);
+        SharedPreferences.Editor editor = userInfo.edit();//get Editor
+        //write username
+        editor.putString("username",email);
+        editor.commit();//submit info
+        Log.i(TAG, "Saved successfully");
+    }
+
+
+    //read username method
+    private void getUserInfo(){
+        SharedPreferences userInfo = getSharedPreferences(username, MODE_PRIVATE);
+        String username = userInfo.getString("username", null);//read saved username
+        Log.i(TAG, "read username");
+        mEmail.setText(username);
+    }
+
+    //remove saved value
+    private void removeUserInfo(){
+        SharedPreferences userInfo = getSharedPreferences(username, MODE_PRIVATE);
+        SharedPreferences.Editor editor = userInfo.edit();//get Editor
+        editor.remove("username");
+        editor.commit();
+        Log.i(TAG, "remove saved value");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getUserInfo();// recover username every resume
     }
 }
 

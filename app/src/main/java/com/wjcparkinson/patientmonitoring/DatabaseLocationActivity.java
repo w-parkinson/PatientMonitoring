@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,6 +58,8 @@ public class DatabaseLocationActivity extends AppCompatActivity {
 
     //UPLOAD LOCATION
     private DatabaseReference mReference;
+    String PassedUsername;
+    String passedAccount;
 
     //BBSID/latLng pairs
     private HashMap<String, String> knownLocs;
@@ -108,7 +112,6 @@ public class DatabaseLocationActivity extends AppCompatActivity {
             }
         };
 
-
     }
 
     //optimize power
@@ -132,6 +135,8 @@ public class DatabaseLocationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        getUserInfo();
 
         // Start requesting updates again
         try {
@@ -158,7 +163,6 @@ public class DatabaseLocationActivity extends AppCompatActivity {
         registerReceiver(receiver, scanFilter);
         wifiManager.startScan();
     }
-
 
     //sycn with cloud
     double tLat;
@@ -208,10 +212,6 @@ public class DatabaseLocationActivity extends AppCompatActivity {
 
                 //create database and send value to it
                 mReference = FirebaseDatabase.getInstance().getReference();
-                final DatabaseReference myLat = mReference.child("Latitude");
-                final DatabaseReference myLong = mReference.child("Longitude");
-                myLat.setValue(tLat);
-                myLong.setValue(tLong);
 
                 //set time on cloud
                 //get the system local time
@@ -219,10 +219,9 @@ public class DatabaseLocationActivity extends AppCompatActivity {
                 dff.setTimeZone(TimeZone.getTimeZone("GMT+00"));
                 //create timestamp string
                 String timestamp = dff.format(new Date());
-                //upload time to the database
-                final DatabaseReference myTimeStamp = mReference.child("TimeStamp");
-                myTimeStamp.setValue(timestamp);
 
+                //call the upload method upload all info to cloud
+                writeNewUser(PassedUsername,tLat,tLong,timestamp);
             }
         }
 
@@ -243,16 +242,6 @@ public class DatabaseLocationActivity extends AppCompatActivity {
 
     }
 
-
-    /*
-    // back to select
-    public void backTo(View view) {
-        startActivity(new Intent(DatabaseLocationActivity.this, DatabaseAccountActivity.class));
-        //do not kill activity
-        moveTaskTOBack(true);
-    }
-*/
-
     //the method keep activity at background
     private void moveTaskTOBack(boolean b) {
 
@@ -263,6 +252,46 @@ public class DatabaseLocationActivity extends AppCompatActivity {
         locationManager.removeUpdates(locationListener);
         Toast.makeText(DatabaseLocationActivity.this, "Location Listener stopped.", Toast.LENGTH_LONG).show();
         startActivity(new Intent(DatabaseLocationActivity.this, DatabaseAccountActivity.class));
+    }
+
+    //database structure
+    @IgnoreExtraProperties
+    public static class User {
+
+        public String Username;
+        public double Latitude;
+        public double Longitude;
+        public String Time;
+
+        public User() {
+            // Default constructor required for calls to DataSnapshot.getValue(User.class)
+        }
+
+        public User(String Username, double Latitude, double Longitude, String Time ) {
+            this.Username = Username;
+            this.Latitude = Latitude;
+            this.Longitude = Longitude;
+            this.Time = Time;
+        }
+
+    }
+
+    //the method send info to database
+    private void writeNewUser( String Username, double Latitude, double Longitude,String Time) {
+
+        User user = new User(Username,Latitude,Longitude,Time);
+
+        mReference.child(passedAccount).setValue(user);
+    }
+
+    //read passed username from previous
+    String passedUser;
+    private void getUserInfo(){
+        SharedPreferences userInfo = getSharedPreferences(passedUser, MODE_PRIVATE);
+        PassedUsername = userInfo.getString("CloudUsers", null);//read saved username
+        Log.i(TAG, "location username");
+        //take user account before @ for the database path name
+        passedAccount = PassedUsername.substring(0,PassedUsername.indexOf("@"));
     }
 
 }

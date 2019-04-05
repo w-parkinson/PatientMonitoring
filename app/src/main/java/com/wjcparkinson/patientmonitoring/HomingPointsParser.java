@@ -17,9 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Vishal on 10/20/2018.
+ * HomingPointsParser.java Class that contains all functionality associated with parsing the JSON data
+ * downloaded from the Directions API. Implemented as an AsyncTask so that it runs in the background.
+ * The output of background task is stored in a HomingPathInfo data object.
+ *
+ * Adam Harper, s1440298
  */
-
 public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInfo> {
     HomingTaskLoadedCallback taskCallback;
     String directionMode;
@@ -29,7 +32,10 @@ public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInf
         this.directionMode = directionMode;
     }
 
-    // Parsing the data in non-ui thread
+    /**
+     * Executes in non-UI thread - calls parse on the json data to get the route information, returns
+     * the path info.
+     */
     @Override
     protected HomingPathInfo doInBackground(String... jsonData) {
 
@@ -47,13 +53,18 @@ public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInf
         return pathInfo;
     }
 
-    // Executes in UI thread, after the parsing process
+    /**
+     * Calls the taskCallback method of the context activity to indicate completion of task and
+     * output the parsed data
+     */
     @Override
     protected void onPostExecute(HomingPathInfo result) {
         taskCallback.onTaskDone(result);
     }
 
-    // Parses data fetched from the google directions api, passed as a JSON object.
+    /**
+     * Parses data fetched from the google directions api, passed as a JSON object.
+     */
     public HomingPathInfo parse(JSONObject jObject) {
 
         List<HashMap<String, String>> path = new ArrayList<>();
@@ -96,6 +107,7 @@ public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInf
             e.printStackTrace();
         }
 
+        // Create a new path info to store the path, duration and distance
         HomingPathInfo pathInfo = new HomingPathInfo();
         pathInfo.setPath(path);
         pathInfo.setDuration(duration);

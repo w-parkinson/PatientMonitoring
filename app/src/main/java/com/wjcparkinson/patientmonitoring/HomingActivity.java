@@ -6,11 +6,10 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,21 +29,26 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * HomingActivity.java Activity that controls the behaviour of the "Return Home" section of the app,
+ * including detecting user interaction with the app, constructing the url that gets sent to the
+ * Google Directions API, plotting the returned route on the map.
+ *
+ * Adam Harper, s1440298
+ */
 public class HomingActivity extends AppCompatActivity implements OnMapReadyCallback, HomingTaskLoadedCallback {
 
     // for debugging
     private final String TAG = "HOMING";
 
     // references to ui elements
-    private GoogleMap mMap;
+    private GoogleMap map;
     private TextView durationTv;
     private TextView distanceTv;
     private Button getDirButton;
@@ -56,6 +60,9 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
     // how far the map zooms in around the route
     private final int mPadding = 200;
 
+    // distance at which the user is considered to be home
+    private final float homeDistance = 20f;
+
     // for drawing the route on the map
     LatLng home;
     boolean liveTracking;
@@ -63,10 +70,15 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
     String directionMode;
     boolean hasZoomed;
 
+
+    /**
+     * Called when the activity is first created. Establishes references the UI elements and defines
+     * behaviour that should be displayed on a location callback.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bh_activity);
+        setContentView(R.layout.activity_homing);
 
         // get references to the ui elements
         durationTv = findViewById(R.id.durationTv);
@@ -94,6 +106,11 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
+    /**
+     * Called when the app is restored from the background. Checks if any of the preferences have
+     * changed since it went to the background, and sets the class attributes accordingly. If live
+     * tracking is enabled, request regular updates from the location manager.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -134,6 +151,9 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
+    /**
+     * When the app is sent to the background, stop the location client from receiving updates
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -143,12 +163,18 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
+    /**
+     * Populate the options menu in the action bar
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.homing_menu, menu);
         return true;
     }
 
+    /**
+     * Open the preferences activity when the preferences button of the options menu is pressed
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_homing_settings) {
@@ -158,19 +184,25 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         return true;
     }
 
+    /**
+     * Get the reference to the map once it has been set up
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        map = googleMap;
 
         try {
-            mMap.setMyLocationEnabled(true);
+            map.setMyLocationEnabled(true);
         } catch (SecurityException e) {
             Toast.makeText(this, "App needs location permission to function", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    // Called when user touches get directions button
+    /**
+     * Called when the user presses the get directions button. Requests a single location update from
+     * from the location client
+     */
     public void getDirections(View view) {
 
         // Define the settings of the location request
@@ -185,21 +217,37 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
+
+    /**
+     * Checks if the current location is within 'homeDistance' of home. If not, places markers at current
+     * and home, focuses on the region if necessary, and instantiates a HomingFetchUrl to send a request to
+     * the Directions API
+     */
     private void sendRouteRequest(LatLng current, LatLng home) {
 
         // clear the map
-        mMap.clear();
+        map.clear();
+
+        // Check if the user has reached their home location
+        float[] distanceResult = new float[1];
+        Location.distanceBetween(current.latitude, current.longitude, home.latitude, home.longitude, distanceResult);
+        if (distanceResult[0] < homeDistance) {
+            Toast.makeText(this, "Reached home!", Toast.LENGTH_SHORT).show();
+            distanceTv.setText(R.string.distance_tv_text);
+            durationTv.setText(R.string.duration_tv_text);
+            return;
+        }
 
         // Add markers
-        mMap.addMarker(new MarkerOptions().position(current).title("Start"));
-        mMap.addMarker(new MarkerOptions().position(home).title("Home"));
+        map.addMarker(new MarkerOptions().position(current).title("Current"));
+        map.addMarker(new MarkerOptions().position(home).title("Home"));
 
         // Move the camera to focus on the two markers (unless zoom has already happened)
         if (!hasZoomed) {
             LatLngBounds.Builder boundBuilder = LatLngBounds.builder();
             boundBuilder.include(home);
             boundBuilder.include(current);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), mPadding));
+            map.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), mPadding));
             hasZoomed = true;
         }
 
@@ -210,6 +258,11 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
+
+    /**
+     * Given the lat-lon of an origin and destination, constructs a URL that can be used to query
+     * Google's Directions API
+     */
     private String constructUrl(LatLng origin, LatLng dest, String directionMode) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
@@ -218,6 +271,11 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         return "https://maps.googleapis.com/maps/api/directions/json" + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
     }
 
+    /**
+     * Called when the path between the source and destination has been determined and is ready to
+     * be displayed on screen. Plots the route on the map, updates the duration and direction text
+     * field, and make a toast notification.
+     */
     @Override
     public void onTaskDone(HomingPathInfo pathInfo) {
 
@@ -235,14 +293,17 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         // Add all the points in the route to LineOptions
         lineOptions.addAll(points);
         lineOptions.width(20);
-        lineOptions.color(Color.GREEN);
+        lineOptions.color(Color.BLUE);
 
         // Display the polyline on screen
-        mMap.addPolyline(lineOptions);
+        map.addPolyline(lineOptions);
 
         // Display additional route information
         distanceTv.setText("~" + pathInfo.getDistance());
         durationTv.setText("~" + pathInfo.getDuration());
 
+        Toast toast = Toast.makeText(this, "Route Updated!", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP|Gravity.LEFT, 10, 185);
+        toast.show();
     }
 }

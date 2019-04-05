@@ -5,6 +5,7 @@ Cloud DataExchange
 */
 package com.wjcparkinson.patientmonitoring;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -41,6 +42,10 @@ public class DatabaseActivity extends AppCompatActivity implements OnMapReadyCal
 
     private GoogleMap mMap;
 
+    //get value from pre activity and rectify it
+    String PassedUsername;
+    String passedAccount;
+
 
 
     @Override
@@ -50,10 +55,20 @@ public class DatabaseActivity extends AppCompatActivity implements OnMapReadyCal
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        getUserInfo();
         updateUI();
         basicReadData();
 
+    }
+
+    //read passed username from previous
+    String passedUser;
+    private void getUserInfo(){
+        SharedPreferences userInfo = getSharedPreferences(passedUser, MODE_PRIVATE);
+        PassedUsername = userInfo.getString("CloudUsers", null);//read saved username
+
+        //take user account before @ for the database path name
+        passedAccount = PassedUsername.substring(0,PassedUsername.indexOf("@"));
     }
 
 
@@ -62,10 +77,10 @@ public class DatabaseActivity extends AppCompatActivity implements OnMapReadyCal
         // Create database
         mReference = FirebaseDatabase.getInstance().getReference();
         // Create the info we need
-        final DatabaseReference user = mReference.child("User");
-        DatabaseReference latitude = mReference.child("Latitude");
-        DatabaseReference longitude = mReference.child("Longitude");
-        final DatabaseReference timestamp = mReference.child("TimeStamp");
+        final DatabaseReference user = mReference.child(passedAccount).child("Username");
+        final DatabaseReference latitude = mReference.child(passedAccount).child("Latitude");
+        final DatabaseReference longitude = mReference.child(passedAccount).child("Longitude");
+        final DatabaseReference timestamp = mReference.child(passedAccount).child("Time");
 
 
         // Read from the database
@@ -91,7 +106,7 @@ public class DatabaseActivity extends AppCompatActivity implements OnMapReadyCal
         latitude.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                 tLat = dataSnapshot.getValue(double.class);
+                tLat = dataSnapshot.getValue(double.class);
                 tv_latitude.setText( "Latitude: " + tLat);
                 if(time != null){
                     updateMap();
@@ -108,7 +123,7 @@ public class DatabaseActivity extends AppCompatActivity implements OnMapReadyCal
         longitude.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                 tLong = dataSnapshot.getValue(double.class);
+                tLong = dataSnapshot.getValue(double.class);
                 tv_longitude.setText("Longitude: " + tLong);
                 updateMap();
             }
@@ -224,5 +239,6 @@ public class DatabaseActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onResume() {
         super.onResume();
         setUpMapIfNeed();
+        getUserInfo();
     }
 }

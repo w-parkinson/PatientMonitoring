@@ -28,6 +28,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -64,11 +65,13 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
     private final float homeDistance = 20f;
 
     // for drawing the route on the map
-    LatLng home;
-    boolean liveTracking;
-    long updateInterval;
-    String directionMode;
-    boolean hasZoomed;
+    private LatLng home;
+    private boolean liveTracking;
+    private long updateInterval;
+    private String directionMode;
+    private boolean hasZoomed;
+    private Marker homeMarker;
+    private Marker currentMarker;
 
 
     /**
@@ -88,6 +91,8 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // Create a fused location provider client for receiving location updates
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // define behaviour when a location update is received
@@ -126,15 +131,11 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         directionMode = homingPrefs.getString("direction_mode", "walking");
         updateInterval = 1000 * Integer.parseInt(homingPrefs.getString("update_interval", "5"));
 
-        Log.d(TAG, "onResume: homeLat = " + homeLat);
-        Log.d(TAG, "onResume: homeLon = " + homeLon);
-        Log.d(TAG, "onResume: liveTracking = " + liveTracking);
-        Log.d(TAG, "onResume: directionMode = " + directionMode);
-
         // Enable live tracking by requesting updates from the location client
         if (liveTracking) {
             // direction button is disabled in live tracking mode
             getDirButton.setEnabled(false);
+            getDirButton.setText(R.string.dir_button_text_disabled);
 
             // Define the settings of the location request
             LocationRequest locationRequest = LocationRequest.create();
@@ -151,6 +152,7 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
 
         } else {
             getDirButton.setEnabled(true);
+            getDirButton.setText(R.string.dir_button_text);
         }
 
     }
@@ -182,7 +184,7 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_homing_settings) {
-            Intent intent = new Intent(this, HomingPreferences.class);
+            Intent intent = new Intent(this, HomingPreferencesActivity.class);
             this.startActivity(intent);
         }
         return true;
@@ -246,8 +248,8 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         }
 
         // Add markers
-        map.addMarker(new MarkerOptions().position(current).title("Current"));
-        map.addMarker(new MarkerOptions().position(home).title("Home"));
+        currentMarker = map.addMarker(new MarkerOptions().position(current).title("Current"));
+        homeMarker = map.addMarker(new MarkerOptions().position(home).title("Home"));
 
         // Move the camera to focus on the two markers (unless zoom has already happened)
         if (!hasZoomed) {
@@ -286,19 +288,9 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onTaskDone(HomingPathInfo pathInfo) {
 
-        List<HashMap<String, String>> path = pathInfo.getPath();
-        ArrayList<LatLng> points = new ArrayList<>();
+        // Add all the points in the path to LineOptions
         PolylineOptions lineOptions = new PolylineOptions();
-
-        // Fetch all the points in the path
-        for (int j = 0; j < path.size(); j++) {
-            double lat = Double.parseDouble(path.get(j).get("lat"));
-            double lon = Double.parseDouble(path.get(j).get("lon"));
-            points.add(new LatLng(lat, lon));
-        }
-
-        // Add all the points in the route to LineOptions
-        lineOptions.addAll(points);
+        lineOptions.addAll(pathInfo.getPath());
         lineOptions.width(20);
         lineOptions.color(Color.BLUE);
 
@@ -309,6 +301,11 @@ public class HomingActivity extends AppCompatActivity implements OnMapReadyCallb
         distanceTv.setText("~" + pathInfo.getDistance());
         durationTv.setText("~" + pathInfo.getDuration());
 
+        // Display the addresses on the markers placed in sendRouteRequest
+        currentMarker.setTitle(pathInfo.getStartAddr());
+        homeMarker.setTitle(pathInfo.getEndAddr());
+
+        // Confirm that the route has been updated
         Toast toast = Toast.makeText(this, "Route Updated!", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.TOP|Gravity.LEFT, 10, 185);
         toast.show();

@@ -1,50 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".DatabaseLocationActivity">
 
     <TextView
         android:id="@+id/latitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/Latitude"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textLat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/latitude"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/latitude" />
 
     <TextView
         android:id="@+id/Longitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/Longitude"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/textLat"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textLat" />
 
     <TextView
         android:id="@+id/textLong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/Longitude"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Longitude" />
 
 
     <Button
         android:id="@+id/StopBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Stop"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:onClick="StopListener"
-        />
-</LinearLayout>
+        android:text="@string/Stop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textLong" />
+</android.support.constraint.ConstraintLayout>

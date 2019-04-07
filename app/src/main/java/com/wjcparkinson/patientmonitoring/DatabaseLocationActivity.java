@@ -94,6 +94,8 @@ public class DatabaseLocationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // --------------- INDOOR LOCALISATION -----------------------------------
+
         // register wifi manager
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -101,7 +103,6 @@ public class DatabaseLocationActivity extends AppCompatActivity {
         scanFilter = new IntentFilter();
         scanFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
         scanFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -111,6 +112,8 @@ public class DatabaseLocationActivity extends AppCompatActivity {
                 wifiManager.startScan();
             }
         };
+
+        // -----------------------------------------------------------------------
 
     }
 
@@ -146,6 +149,8 @@ public class DatabaseLocationActivity extends AppCompatActivity {
             Log.d(TAG, "onResume: " + e.toString());
         }
 
+        // --------------- INDOOR LOCALISATION -----------------------------------
+
         // Reload the BSSID, LatLng hashmap from storage
         try {
             File file = new File(getDir("data", MODE_PRIVATE), "bssidLocPairs");
@@ -162,6 +167,8 @@ public class DatabaseLocationActivity extends AppCompatActivity {
         // register the receiver
         registerReceiver(receiver, scanFilter);
         wifiManager.startScan();
+
+        // -----------------------------------------------------------------------
     }
 
     //sycn with cloud
@@ -178,6 +185,8 @@ public class DatabaseLocationActivity extends AppCompatActivity {
 
                 tLat = location.getLatitude();
                 tLong = location.getLongitude();
+
+                // --------------- INDOOR LOCALISATION -----------------------------------
 
                 // Get the strongest signal in list
                 ScanResult bestSignal = null;
@@ -207,8 +216,13 @@ public class DatabaseLocationActivity extends AppCompatActivity {
                         Log.d(TAG, "onLocationChanged: No bssids found");
                     }
                 }
+
+                // -----------------------------------------------------------------------
+
                 textLat.setText(Double.toString(tLat));
                 textLong.setText(Double.toString(tLong));
+
+
 
                 //create database and send value to it
                 mReference = FirebaseDatabase.getInstance().getReference();

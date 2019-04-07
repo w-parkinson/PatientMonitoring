@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomingPreferences" />
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -28,17 +28,17 @@
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".AlarmActivity"
             android:label="@string/med_alerts"
@@ -66,7 +66,14 @@
 
         <activity
             android:name=".HomingActivity"
-            android:label="@string/get_home" />
+            android:label="@string/get_home"
+            android:parentActivityName=".MainActivity"/>
+
+        <activity
+            android:name=".HomingPreferencesActivity"
+            android:label="@string/homing_preferences_label"
+            android:parentActivityName=".HomingActivity"/>
+
         <activity
             android:name=".DatabaseLocationActivity"
             android:label="@string/cloud_sync" />

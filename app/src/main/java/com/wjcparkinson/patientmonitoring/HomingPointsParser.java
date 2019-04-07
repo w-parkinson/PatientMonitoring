@@ -1,19 +1,16 @@
 package com.wjcparkinson.patientmonitoring;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,6 +21,9 @@ import java.util.List;
  * Adam Harper, s1440298
  */
 public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInfo> {
+
+    private final String TAG = "HOMINGPOINTSPARSER";
+
     HomingTaskLoadedCallback taskCallback;
     String directionMode;
 
@@ -47,7 +47,6 @@ public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInf
             pathInfo = parse(jObject);
         } catch (Exception e) {
             Log.d("mylog", e.toString());
-            e.printStackTrace();
         }
 
         return pathInfo;
@@ -67,9 +66,11 @@ public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInf
      */
     public HomingPathInfo parse(JSONObject jObject) {
 
-        List<HashMap<String, String>> path = new ArrayList<>();
+        List<LatLng> path = new ArrayList<>();
         String distance = "";
         String duration = "";
+        String startAddr = "";
+        String endAddr = "";
 
         JSONObject jRoute;
         JSONObject jLeg;
@@ -88,18 +89,16 @@ public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInf
                 polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
                 List<LatLng> list = decodePoly(polyline);
 
-                // traverse the points in each step, adding to path
-                for (int l = 0; l < list.size(); l++) {
-                    HashMap<String, String> hm = new HashMap<>();
-                    hm.put("lat", Double.toString((list.get(l)).latitude));
-                    hm.put("lon", Double.toString((list.get(l)).longitude));
-                    path.add(hm);
+                for (LatLng latlng : list) {
+                    path.add(latlng);
                 }
             }
 
             // get the distance, duration of the route
-            distance = ((JSONObject) jLeg.get("distance")).getString("text");
-            duration = ((JSONObject) jLeg.get("duration")).getString("text");
+            distance =  ((JSONObject) jLeg.get("distance")).getString("text");
+            duration =  ((JSONObject) jLeg.get("duration")).getString("text");
+            startAddr = jLeg.getString("start_address");
+            endAddr   = jLeg.getString("end_address");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -112,6 +111,8 @@ public class HomingPointsParser extends AsyncTask<String, Integer, HomingPathInf
         pathInfo.setPath(path);
         pathInfo.setDuration(duration);
         pathInfo.setDistance(distance);
+        pathInfo.setStartAddr(startAddr);
+        pathInfo.setEndAddr(endAddr);
 
         return pathInfo;
     }

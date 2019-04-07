@@ -1,5 +1,7 @@
 package com.wjcparkinson.patientmonitoring;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,7 +13,9 @@ import java.util.List;
 public class HomingPathInfo {
     private String duration;
     private String distance;
-    private List<HashMap<String, String>> path;
+    private String startAddr;
+    private String endAddr;
+    private List<LatLng> path;
 
     public String getDistance() {
         return distance;
@@ -29,11 +33,27 @@ public class HomingPathInfo {
         this.duration = duration;
     }
 
-    public List<HashMap<String, String>> getPath() {
+    public String getStartAddr() {
+        return startAddr;
+    }
+
+    public void setStartAddr(String startAddr) {
+        this.startAddr = startAddr;
+    }
+
+    public String getEndAddr() {
+        return endAddr;
+    }
+
+    public void setEndAddr(String endAddr) {
+        this.endAddr = endAddr;
+    }
+
+    public List<LatLng> getPath() {
         return path;
     }
 
-    public void setPath(List<HashMap<String, String>> path) {
+    public void setPath(List<LatLng> path) {
         this.path = path;
     }
 }

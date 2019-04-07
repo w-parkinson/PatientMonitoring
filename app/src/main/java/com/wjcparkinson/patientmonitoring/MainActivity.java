@@ -18,8 +18,16 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
-// Main home screen of the app, requests permissions and starts other activities when buttons are pressed
+// Main home screen of the app,
 
+/**
+ * Main home screen of the app - requests permissions and starts other activities when buttons are
+ * pressed. Also hard-codes the BSSID/LatLng pairs used for the indoor localisation functionality.
+ *
+ * Adam Harper, s1440298
+ * William Parkinson, s1433610
+ *
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = "HOMESCREEN";
@@ -45,11 +53,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        // Save BSSID, LatLng pairs to shared preferences
+        // Define BSSID, LatLng pairs
         HashMap<String, String> bssidLocs = new HashMap<String, String>();
         bssidLocs.put("9c:30:5b:63:d1:55", "55.922644, -3.172765");
         bssidLocs.put("54:78:1a:73:a2:61", "55.922651, -3.172547");
 
+        // Write the Hashmap of pairs to the app's private internal storage
         try {
             File file = new File(getDir("data", MODE_PRIVATE), "bssidLocPairs");
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // Go to return home activity
-    public void setupBh(View v){
+    public void setupHoming(View v){
         Intent intent = new Intent(this, HomingActivity.class);
         startActivity(intent);
     }

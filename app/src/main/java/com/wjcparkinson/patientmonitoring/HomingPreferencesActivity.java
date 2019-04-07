@@ -11,7 +11,7 @@ import android.os.Bundle;
  *
  * Adam Harper, s1440298
  */
-public class HomingPreferences extends AppCompatActivity {
+public class HomingPreferencesActivity extends AppCompatActivity {
 
     /**
      * On creation of preference activity, create a new HomingPreferencesFragment and replace the

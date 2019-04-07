@@ -73,7 +73,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:onClick="setupBh"
+        android:onClick="setupHoming"
         android:text="Get Home"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         android:textSize="20sp"

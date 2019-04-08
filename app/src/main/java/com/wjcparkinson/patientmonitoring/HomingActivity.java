@@ -32,10 +32,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * HomingActivity.java Activity that controls the behaviour of the "Return Home" section of the app,
  * including detecting user interaction with the app, constructing the url that gets sent to the

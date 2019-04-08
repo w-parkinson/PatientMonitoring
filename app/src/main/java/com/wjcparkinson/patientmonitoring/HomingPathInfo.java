@@ -1,12 +1,11 @@
 package com.wjcparkinson.patientmonitoring;
 
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.HashMap;
 import java.util.List;
 
 /**
- * Data class that contains a path's duration, distance and a list of points in the route.
+ * Data class that contains a path's duration, distance, start address, end address and a list of
+ * points in the route, as well as getters and setters for each.
  *
  * Adam Harper, s1440298
  */

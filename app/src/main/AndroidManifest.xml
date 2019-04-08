@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wjcparkinson.patientmonitoring">
 
+    <!-- Required Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -20,11 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
+        <!-- API key for maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <!-- Splash Screen -->
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +34,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Main Activity -->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,23 +42,21 @@
             </intent-filter>
         </activity>
 
+        <!-- Alarm Feature Activities/Service -->
         <activity
             android:name=".AlarmActivity"
             android:label="@string/med_alerts"
             android:theme="@style/AppTheme" />
-
         <receiver android:name=".AlarmReceiver" />
-
         <activity android:name=".AlarmSettingsActivity" />
-
         <service
             android:name=".AlarmRingTonePlayingService"
             android:enabled="true" />
 
+        <!-- Geofence Feature Activity/Receiver -->
         <activity
             android:name=".GeofenceCreator"
             android:label="@string/pat_bounds" />
-
         <receiver
             android:name=".GeofenceReceiver"
             android:exported="false">
@@ -64,16 +65,17 @@
             </intent-filter>
         </receiver>
 
+        <!-- Return Home Feature Activities -->
         <activity
             android:name=".HomingActivity"
             android:label="@string/get_home"
             android:parentActivityName=".MainActivity"/>
-
         <activity
             android:name=".HomingPreferencesActivity"
             android:label="@string/homing_preferences_label"
             android:parentActivityName=".HomingActivity"/>
 
+        <!-- Cloud Synchronisation Activities -->
         <activity
             android:name=".DatabaseLocationActivity"
             android:label="@string/cloud_sync" />
@@ -86,7 +88,7 @@
         <activity
             android:name=".DatabaseLoginActivity"
             android:label="@string/cloud_sync" />
-        <activity android:name=".PhoneSetter"></activity>
+
     </application>
 
 </manifest>

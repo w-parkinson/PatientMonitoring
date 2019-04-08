@@ -136,11 +136,6 @@ public class GeofenceCreator extends AppCompatActivity implements OnMapReadyCall
         startActivity(intentMain);
     }
 
-    private void numberSet(){
-        Intent intentNumber = new Intent(this,NumberActivity.class);
-        startActivity(intentNumber);
-    }
-
     //Display message if geofence successfully created.
     private void messageMaker(){
         Toast.makeText(this,"Patient boundary successfully established",Toast.LENGTH_SHORT).show();
@@ -158,7 +153,5 @@ public class GeofenceCreator extends AppCompatActivity implements OnMapReadyCall
     public String getRequestId() {
         return null;
     }
-
-
 
 }
